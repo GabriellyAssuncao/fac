@@ -1,0 +1,88 @@
+   .data
+n273: .float 273.15 # K -> 0C
+n95: .float 1.8
+n32: .float 32.0 # F -> 0C
+n18: .float 0.55555555555555555
+linha: .asciiz "\n"
+
+    .text
+main:
+    li $v0, 12 # lê o 1ª caracter
+    syscall
+    move $s0, $v0
+    
+    li $v0, 12
+    syscall 
+
+    li $v0, 12  # lê o 2ª caracter
+    syscall
+    move $s1, $v0
+    
+    li $v0, 12
+    syscall 
+
+    li $v0, 6 # lê a temp (float)
+    syscall   # $f0 é a temperatura de entrada
+
+# Carrega os caracteres
+    li $t0, 'K' 
+    li $t1, 'F' 
+    li $t2, 'C' 
+
+# Carrega as 'funções' de .data
+    lwc1 $f1, n273
+    lwc1 $f2, n95
+    lwc1 $f3, n32
+    lwc1 $f4, n18
+
+# Pula para as 'funções'
+    beq $s0, $t0, calc_K
+    beq $s0, $t1, calc_F
+    beq $s0, $t2, calc_C
+
+calc_K: 
+        bne $s1, $t2, KF #s1=!C->KF
+#KC     
+        sub.s $f0, $f0, $f1
+        j EXIT
+KF:     
+        sub.s $f0, $f0, $f1
+        mul.s $f0, $f0, $f2
+        add.s $f0, $f0, $f3
+
+        j EXIT
+
+calc_F: 
+        bne $s1, $t2, FK  #s1=!C->FK
+#FC     
+        sub.s $f0, $f0, $f3
+        mul.s $f0, $f0, $f4
+        j EXIT
+
+FK:
+        sub.s $f0, $f0, $f3,
+        mul.s $f0, $f0, $f4
+        add.s $f0, $f0, $f1
+        j EXIT
+
+calc_C: 
+        bne $s1, $t0, CF  #s1=!K->CF
+#CK
+        add.s $f0, $f0, $f1
+        j EXIT
+
+ CF:       
+        mul.s $f0, $f0, $f2
+        add.s $f0, $f0, $f3
+        j EXIT
+
+EXIT:
+    li $v0, 2
+    mov.s $f12, $f0
+    syscall # Imprime o result.
+
+    li $v0, 4
+    la $a0, linha # \n
+    syscall
+
+    li $v0, 10 # encerra

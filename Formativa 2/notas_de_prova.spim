@@ -1,0 +1,74 @@
+.data
+	e: .asciiz"E\n"
+	d: .asciiz"D\n"
+	c: .asciiz"C\n"
+	bteste: .asciiz"B\n"
+	a: .asciiz"A\n"
+.text
+main:
+	li $v0, 5
+	syscall
+	
+	move $t0 $v0
+	
+	addi $t1, $t1, 0
+	addi $t2, $t2, 35
+	addi $t3, $t3, 60
+	addi $t4, $t4, 85
+	addi $t5, $t5, 100
+		
+	beq $t0, $t1, saida1 
+	ble $t0, $t2, saida2
+	ble $t0, $t3, saida3
+	ble $t0, $t4, saida4
+	ble $t0, $t5, saida5
+	
+saida1:
+	
+	li $v0, 4
+	la $a0, e
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+saida2:
+	
+	li $v0, 4
+	la $a0, d
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+saida3:
+	
+	li $v0, 4
+	la $a0, c
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+saida4:
+	
+	li $v0, 4
+	la $a0, bteste
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+saida5:
+	
+	li $v0, 4
+	la $a0, a
+	syscall
+	
+	li $v0, 10
+	syscall
+	
+saida: 
+	
+	li $v0, 10
+	syscall
